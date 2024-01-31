@@ -1,11 +1,11 @@
 {
-    "name": "shipstream/ups-rest-php-sdk",
+    "name": "besmartand-pro/ups-api",
     "description": "PHP SDK for UPS REST API",
     "license": "Apache-2.0",
     "authors": [
         {
-            "name": "Shipstream",
-            "email": "info@shipstream.io"
+            "name": "BeSmartAnd.pro",
+            "email": "kuba@besmartand.pro"
         }
     ],
     "require": {
@@ -15,7 +15,7 @@
         "jane-php/open-api-runtime": "^7.5",
         "php-http/curl-client": "^2.3",
         "symfony/polyfill-php81": "^1.28",
-        "symfony/serializer": "^5.4"
+        "symfony/serializer": "^5.4|^6.0"
     },
     "require-dev": {
         "jane-php/open-api-3": "^7.5",
@@ -24,7 +24,7 @@
     },
     "autoload": {
         "psr-4": {
-            "ShipStream\\Ups\\": "src/"
+            "BesmartandPro\\UpsApi\\": "src/"
         }
     },
     "autoload-dev": {

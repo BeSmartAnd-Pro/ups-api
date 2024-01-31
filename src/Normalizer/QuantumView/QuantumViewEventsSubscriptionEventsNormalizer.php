@@ -1,16 +1,13 @@
 <?php
 
-namespace ShipStream\Ups\Normalizer\QuantumView;
+declare(strict_types=1);
 
-use ShipStream\Ups\Api\Normalizer\QuantumViewEventsSubscriptionEventsNormalizer as BaseNormalizer;
-use function array_is_list;
-use function is_array;
+namespace BesmartandPro\UpsApi\Normalizer\QuantumView;
+
+use BesmartandPro\UpsApi\Generated\Normalizer\QuantumViewEventsSubscriptionEventsNormalizer as BaseNormalizer;
 
 class QuantumViewEventsSubscriptionEventsNormalizer extends BaseNormalizer
 {
-    /**
-     * @inheritDoc
-     */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
         if ($data === null || is_array($data) === false) {
@@ -21,6 +18,7 @@ class QuantumViewEventsSubscriptionEventsNormalizer extends BaseNormalizer
         if (isset($data['SubscriptionFile']) && ! array_is_list($data['SubscriptionFile'])) {
             $data['SubscriptionFile'] = [$data['SubscriptionFile']];
         }
+        
         return parent::denormalize($data, $class, $format, $context);
     }
 }

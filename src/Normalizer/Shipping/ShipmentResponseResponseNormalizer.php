@@ -1,16 +1,13 @@
 <?php
 
-namespace ShipStream\Ups\Normalizer\Shipping;
+declare(strict_types=1);
 
-use ShipStream\Ups\Api\Normalizer\ShipmentResponseResponseNormalizer as BaseNormalizer;
-use function array_is_list;
-use function is_array;
+namespace BesmartandPro\UpsApi\Normalizer\Shipping;
+
+use BesmartandPro\UpsApi\Generated\Normalizer\ShipmentResponseResponseNormalizer as BaseNormalizer;
 
 class ShipmentResponseResponseNormalizer extends BaseNormalizer
 {
-    /**
-     * @inheritDoc
-     */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
         if ($data === null || is_array($data) === false) {
@@ -22,6 +19,7 @@ class ShipmentResponseResponseNormalizer extends BaseNormalizer
         if (isset($data['Alert']) && ! array_is_list($data['Alert'])) {
             $data['Alert'] = [$data['Alert']];
         }
+        
         return parent::denormalize($data, $class, $format, $context);
     }
 }

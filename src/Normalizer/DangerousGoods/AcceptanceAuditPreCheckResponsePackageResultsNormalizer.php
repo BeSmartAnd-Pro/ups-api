@@ -1,16 +1,13 @@
 <?php
 
-namespace ShipStream\Ups\Normalizer\DangerousGoods;
+declare(strict_types=1);
 
-use ShipStream\Ups\Api\Normalizer\AcceptanceAuditPreCheckResponsePackageResultsNormalizer as BaseNormalizer;
-use function array_is_list;
-use function is_array;
+namespace BesmartandPro\UpsApi\Normalizer\DangerousGoods;
+
+use BesmartandPro\UpsApi\Generated\Normalizer\AcceptanceAuditPreCheckResponsePackageResultsNormalizer as BaseNormalizer;
 
 class AcceptanceAuditPreCheckResponsePackageResultsNormalizer extends BaseNormalizer
 {
-    /**
-     * @inheritDoc
-     */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
         if ($data === null || is_array($data) === false) {
@@ -21,6 +18,7 @@ class AcceptanceAuditPreCheckResponsePackageResultsNormalizer extends BaseNormal
         if (isset($data['ChemicalRecordResults']) && ! array_is_list($data['ChemicalRecordResults'])) {
             $data['ChemicalRecordResults'] = [$data['ChemicalRecordResults']];
         }
+        
         return parent::denormalize($data, $class, $format, $context);
     }
 }

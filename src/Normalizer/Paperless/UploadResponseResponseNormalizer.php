@@ -1,16 +1,13 @@
 <?php
 
-namespace ShipStream\Ups\Normalizer\Paperless;
+declare(strict_types=1);
 
-use ShipStream\Ups\Api\Normalizer\UploadResponseResponseNormalizer as BaseNormalizer;
-use function array_is_list;
-use function is_array;
+namespace BesmartandPro\UpsApi\Normalizer\Paperless;
+
+use BesmartandPro\UpsApi\Generated\Normalizer\UploadResponseResponseNormalizer as BaseNormalizer;
 
 class UploadResponseResponseNormalizer extends BaseNormalizer
 {
-    /**
-     * @inheritDoc
-     */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
         if ($data === null || is_array($data) === false) {
@@ -21,6 +18,7 @@ class UploadResponseResponseNormalizer extends BaseNormalizer
         if (isset($data['Alert']) && ! array_is_list($data['Alert'])) {
             $data['Alert'] = [$data['Alert']];
         }
+        
         return parent::denormalize($data, $class, $format, $context);
     }
 }

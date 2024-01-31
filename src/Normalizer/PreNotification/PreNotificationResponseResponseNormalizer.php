@@ -1,10 +1,10 @@
 <?php
 
-namespace ShipStream\Ups\Normalizer\PreNotification;
+declare(strict_types=1);
 
-use ShipStream\Ups\Api\Normalizer\PreNotificationResponseResponseNormalizer as BaseNormalizer;
-use function array_is_list;
-use function is_array;
+namespace BesmartandPro\UpsApi\Normalizer\PreNotification;
+
+use BesmartandPro\UpsApi\Generated\Normalizer\PreNotificationResponseResponseNormalizer as BaseNormalizer;
 
 class PreNotificationResponseResponseNormalizer extends BaseNormalizer
 {
@@ -21,6 +21,7 @@ class PreNotificationResponseResponseNormalizer extends BaseNormalizer
         if (isset($data['Alert']) && ! array_is_list($data['Alert'])) {
             $data['Alert'] = [$data['Alert']];
         }
+        
         return parent::denormalize($data, $class, $format, $context);
     }
 }

@@ -1,16 +1,13 @@
 <?php
 
-namespace ShipStream\Ups\Normalizer\QuantumView;
+declare(strict_types=1);
 
-use ShipStream\Ups\Api\Normalizer\QuantumViewResponseResponseNormalizer as BaseNormalizer;
-use function array_is_list;
-use function is_array;
+namespace BesmartandPro\UpsApi\Normalizer\QuantumView;
+
+use BesmartandPro\UpsApi\Generated\Normalizer\QuantumViewResponseResponseNormalizer as BaseNormalizer;
 
 class QuantumViewResponseResponseNormalizer extends BaseNormalizer
 {
-    /**
-     * @inheritDoc
-     */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
         if ($data === null || is_array($data) === false) {
@@ -21,6 +18,7 @@ class QuantumViewResponseResponseNormalizer extends BaseNormalizer
         if (isset($data['Error']) && ! array_is_list($data['Error'])) {
             $data['Error'] = [$data['Error']];
         }
+        
         return parent::denormalize($data, $class, $format, $context);
     }
 }

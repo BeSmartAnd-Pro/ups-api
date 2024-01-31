@@ -1,16 +1,13 @@
 <?php
 
-namespace ShipStream\Ups\Normalizer\Locator;
+declare(strict_types=1);
 
-use ShipStream\Ups\Api\Normalizer\AccessPointInformationBusinessClassificationListNormalizer as BaseNormalizer;
-use function array_is_list;
-use function is_array;
+namespace BesmartandPro\UpsApi\Normalizer\Locator;
+
+use BesmartandPro\UpsApi\Generated\Normalizer\AccessPointInformationBusinessClassificationListNormalizer as BaseNormalizer;
 
 class AccessPointInformationBusinessClassificationListNormalizer extends BaseNormalizer
 {
-    /**
-     * @inheritDoc
-     */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
         if ($data === null || is_array($data) === false) {
@@ -21,6 +18,7 @@ class AccessPointInformationBusinessClassificationListNormalizer extends BaseNor
         if (isset($data['BusinessClassification']) && ! array_is_list($data['BusinessClassification'])) {
             $data['BusinessClassification'] = [$data['BusinessClassification']];
         }
+        
         return parent::denormalize($data, $class, $format, $context);
     }
 }

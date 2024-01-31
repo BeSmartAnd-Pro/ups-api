@@ -1,16 +1,13 @@
 <?php
 
-namespace ShipStream\Ups\Normalizer\Rating;
+declare(strict_types=1);
 
-use ShipStream\Ups\Api\Normalizer\RatedPackageNegotiatedChargesNormalizer as BaseNormalizer;
-use function array_is_list;
-use function is_array;
+namespace BesmartandPro\UpsApi\Normalizer\Rating;
+
+use BesmartandPro\UpsApi\Generated\Normalizer\RatedPackageNegotiatedChargesNormalizer as BaseNormalizer;
 
 class RatedPackageNegotiatedChargesNormalizer extends BaseNormalizer
 {
-    /**
-     * @inheritDoc
-     */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
         if ($data === null || is_array($data) === false) {
@@ -21,6 +18,7 @@ class RatedPackageNegotiatedChargesNormalizer extends BaseNormalizer
         if (isset($data['ItemizedCharges']) && ! array_is_list($data['ItemizedCharges'])) {
             $data['ItemizedCharges'] = [$data['ItemizedCharges']];
         }
+        
         return parent::denormalize($data, $class, $format, $context);
     }
 }

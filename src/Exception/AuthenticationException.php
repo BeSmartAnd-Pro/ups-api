@@ -1,9 +1,11 @@
 <?php
 
-namespace ShipStream\Ups\Exception;
+declare(strict_types=1);
+
+namespace BesmartandPro\UpsApi\Exception;
 
 use RuntimeException;
-use ShipStream\Ups\Api\Exception\ClientException;
+use BesmartandPro\UpsApi\Generated\Exception\ClientException;
 
 class AuthenticationException extends RuntimeException implements ClientException
 {

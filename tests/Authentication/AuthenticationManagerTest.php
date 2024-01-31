@@ -5,14 +5,14 @@ namespace Tests\Authentication;
 use Nyholm\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientInterface;
-use ShipStream\Ups\Authentication\AccessToken;
-use ShipStream\Ups\Authentication\AccessTokenCache;
-use ShipStream\Ups\Authentication\AuthenticationManager;
-use ShipStream\Ups\Authentication\InMemoryAccessTokenCache;
-use ShipStream\Ups\Client;
-use ShipStream\Ups\Config;
+use BesmartandPro\UpsApi\Authentication\AccessToken;
+use BesmartandPro\UpsApi\Authentication\AccessTokenCacheInterface;
+use BesmartandPro\UpsApi\Authentication\AuthenticationManager;
+use BesmartandPro\UpsApi\Authentication\InMemoryAccessTokenCache;
+use BesmartandPro\UpsApi\Client;
+use BesmartandPro\UpsApi\Config;
 
-/** @covers \ShipStream\Ups\Authentication\AuthenticationManager */
+/** @covers \BesmartandPro\UpsApi\Authentication\AuthenticationManager */
 final class AuthenticationManagerTest extends TestCase
 {
     public function testItLoadsAccessTokenFromCache()
@@ -29,7 +29,7 @@ final class AuthenticationManagerTest extends TestCase
             ->setIssuedAt(time())
             ->setExpiresIn(strtotime('+4 hours'));
 
-        $cacheStub = $this->createStub(AccessTokenCache::class);
+        $cacheStub = $this->createStub(AccessTokenCacheInterface::class);
         $cacheStub->method('retrieve')
             ->willReturn($expectedAccessToken);
 

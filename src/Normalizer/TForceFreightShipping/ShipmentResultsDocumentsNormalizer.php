@@ -1,16 +1,13 @@
 <?php
 
-namespace ShipStream\Ups\Normalizer\TForceFreightShipping;
+declare(strict_types=1);
 
-use ShipStream\Ups\Api\Normalizer\ShipmentResultsDocumentsNormalizer as BaseNormalizer;
-use function array_is_list;
-use function is_array;
+namespace BesmartandPro\UpsApi\Normalizer\TForceFreightShipping;
+
+use BesmartandPro\UpsApi\Generated\Normalizer\ShipmentResultsDocumentsNormalizer as BaseNormalizer;
 
 class ShipmentResultsDocumentsNormalizer extends BaseNormalizer
 {
-    /**
-     * @inheritDoc
-     */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
         if ($data === null || is_array($data) === false) {
@@ -21,9 +18,11 @@ class ShipmentResultsDocumentsNormalizer extends BaseNormalizer
         if (isset($data['Image']) && ! array_is_list($data['Image'])) {
             $data['Image'] = [$data['Image']];
         }
+        
         if (isset($data['Forms']) && ! array_is_list($data['Forms'])) {
             $data['Forms'] = [$data['Forms']];
         }
+        
         return parent::denormalize($data, $class, $format, $context);
     }
 }

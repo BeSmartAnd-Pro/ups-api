@@ -1,16 +1,13 @@
 <?php
 
-namespace ShipStream\Ups\Normalizer\Pickup;
+declare(strict_types=1);
 
-use ShipStream\Ups\Api\Normalizer\PickupGetServiceCenterFacilitiesResponseServiceCenterLocationNormalizer as BaseNormalizer;
-use function array_is_list;
-use function is_array;
+namespace BesmartandPro\UpsApi\Normalizer\Pickup;
+
+use BesmartandPro\UpsApi\Generated\Normalizer\PickupGetServiceCenterFacilitiesResponseServiceCenterLocationNormalizer as BaseNormalizer;
 
 class PickupGetServiceCenterFacilitiesResponseServiceCenterLocationNormalizer extends BaseNormalizer
 {
-    /**
-     * @inheritDoc
-     */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
         if ($data === null || is_array($data) === false) {
@@ -21,6 +18,7 @@ class PickupGetServiceCenterFacilitiesResponseServiceCenterLocationNormalizer ex
         if (isset($data['DropOffFacilities']) && ! array_is_list($data['DropOffFacilities'])) {
             $data['DropOffFacilities'] = [$data['DropOffFacilities']];
         }
+        
         return parent::denormalize($data, $class, $format, $context);
     }
 }

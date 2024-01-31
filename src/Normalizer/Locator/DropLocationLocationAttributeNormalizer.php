@@ -1,16 +1,13 @@
 <?php
 
-namespace ShipStream\Ups\Normalizer\Locator;
+declare(strict_types=1);
 
-use ShipStream\Ups\Api\Normalizer\DropLocationLocationAttributeNormalizer as BaseNormalizer;
-use function array_is_list;
-use function is_array;
+namespace BesmartandPro\UpsApi\Normalizer\Locator;
+
+use BesmartandPro\UpsApi\Generated\Normalizer\DropLocationLocationAttributeNormalizer as BaseNormalizer;
 
 class DropLocationLocationAttributeNormalizer extends BaseNormalizer
 {
-    /**
-     * @inheritDoc
-     */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
         if ($data === null || is_array($data) === false) {
@@ -21,6 +18,7 @@ class DropLocationLocationAttributeNormalizer extends BaseNormalizer
         if (isset($data['OptionCode']) && ! array_is_list($data['OptionCode'])) {
             $data['OptionCode'] = [$data['OptionCode']];
         }
+        
         return parent::denormalize($data, $class, $format, $context);
     }
 }

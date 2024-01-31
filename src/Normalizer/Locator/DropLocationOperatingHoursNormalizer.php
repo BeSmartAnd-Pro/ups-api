@@ -1,10 +1,10 @@
 <?php
 
-namespace ShipStream\Ups\Normalizer\Locator;
+declare(strict_types=1);
 
-use ShipStream\Ups\Api\Normalizer\DropLocationOperatingHoursNormalizer as BaseNormalizer;
-use function array_is_list;
-use function is_array;
+namespace BesmartandPro\UpsApi\Normalizer\Locator;
+
+use BesmartandPro\UpsApi\Generated\Normalizer\DropLocationOperatingHoursNormalizer as BaseNormalizer;
 
 class DropLocationOperatingHoursNormalizer extends BaseNormalizer
 {
@@ -21,6 +21,7 @@ class DropLocationOperatingHoursNormalizer extends BaseNormalizer
         if (isset($data['StandardHours']) && ! array_is_list($data['StandardHours'])) {
             $data['StandardHours'] = [$data['StandardHours']];
         }
+        
         return parent::denormalize($data, $class, $format, $context);
     }
 }

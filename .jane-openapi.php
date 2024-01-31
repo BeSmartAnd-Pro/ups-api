@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'openapi-file' => __DIR__ . '/openapi.json',
-    'namespace' => 'ShipStream\Ups\Api',
-    'directory' => __DIR__ . '/src/Api',
+    'namespace' => 'BesmartandPro\UpsApi\Generated',
+    'directory' => __DIR__ . '/src/Generated',
     'throw-unexpected-status-code' => true,
 ];

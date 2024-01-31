@@ -1,16 +1,13 @@
 <?php
 
-namespace ShipStream\Ups\Normalizer\TForceFreightRating;
+declare(strict_types=1);
 
-use ShipStream\Ups\Api\Normalizer\FreightRateResponseNormalizer as BaseNormalizer;
-use function array_is_list;
-use function is_array;
+namespace BesmartandPro\UpsApi\Normalizer\TForceFreightRating;
+
+use BesmartandPro\UpsApi\Generated\Normalizer\FreightRateResponseNormalizer as BaseNormalizer;
 
 class FreightRateResponseNormalizer extends BaseNormalizer
 {
-    /**
-     * @inheritDoc
-     */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
         if ($data === null || is_array($data) === false) {
@@ -21,12 +18,15 @@ class FreightRateResponseNormalizer extends BaseNormalizer
         if (isset($data['Rate']) && ! array_is_list($data['Rate'])) {
             $data['Rate'] = [$data['Rate']];
         }
+        
         if (isset($data['Commodity']) && ! array_is_list($data['Commodity'])) {
             $data['Commodity'] = [$data['Commodity']];
         }
+        
         if (isset($data['AlternateRatesResponse']) && ! array_is_list($data['AlternateRatesResponse'])) {
             $data['AlternateRatesResponse'] = [$data['AlternateRatesResponse']];
         }
+        
         return parent::denormalize($data, $class, $format, $context);
     }
 }

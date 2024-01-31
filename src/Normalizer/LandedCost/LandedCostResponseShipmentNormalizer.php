@@ -1,16 +1,13 @@
 <?php
 
-namespace ShipStream\Ups\Normalizer\LandedCost;
+declare(strict_types=1);
 
-use ShipStream\Ups\Api\Normalizer\LandedCostResponseShipmentNormalizer as BaseNormalizer;
-use function array_is_list;
-use function is_array;
+namespace BesmartandPro\UpsApi\Normalizer\LandedCost;
+
+use BesmartandPro\UpsApi\Generated\Normalizer\LandedCostResponseShipmentNormalizer as BaseNormalizer;
 
 class LandedCostResponseShipmentNormalizer extends BaseNormalizer
 {
-    /**
-     * @inheritDoc
-     */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
         if ($data === null || is_array($data) === false) {
@@ -21,6 +18,7 @@ class LandedCostResponseShipmentNormalizer extends BaseNormalizer
         if (isset($data['shipmentItems']) && ! array_is_list($data['shipmentItems'])) {
             $data['shipmentItems'] = [$data['shipmentItems']];
         }
+        
         return parent::denormalize($data, $class, $format, $context);
     }
 }

@@ -1,15 +1,14 @@
 <?php
 
-namespace ShipStream\Ups\Normalizer\Pickup;
+declare(strict_types=1);
 
-use ShipStream\Ups\Api\Normalizer\DropOffFacilitiesAddressNormalizer as BaseNormalizer;
+namespace BesmartandPro\UpsApi\Normalizer\Pickup;
+
+use BesmartandPro\UpsApi\Generated\Normalizer\DropOffFacilitiesAddressNormalizer as BaseNormalizer;
 use function is_array;
 
 class DropOffFacilitiesAddressNormalizer extends BaseNormalizer
 {
-    /**
-     * @inheritDoc
-     */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
         if ($data === null || is_array($data) === false) {
@@ -20,6 +19,7 @@ class DropOffFacilitiesAddressNormalizer extends BaseNormalizer
         if (isset($data['AddressLine']) && ! is_array($data['AddressLine'])) {
             $data['AddressLine'] = [$data['AddressLine']];
         }
+        
         return parent::denormalize($data, $class, $format, $context);
     }
 }

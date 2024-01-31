@@ -1,6 +1,8 @@
 <?php
 
-namespace ShipStream\Ups\Authentication;
+declare(strict_types=1);
+
+namespace BesmartandPro\UpsApi\Authentication;
 
 use DateTime;
 use DateTimeZone;

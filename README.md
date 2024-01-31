@@ -1,11 +1,11 @@
 # UPS REST PHP SDK
 
-A PHP SDK for the UPS REST API, brought to you by [ShipStream](https://shipstream.io).
+A PHP SDK for the UPS REST API, brought to you by [BeSmartAnd.Pro](https://besmartand.pro) forked from [ShipStream](https://shipstream.io).
 
 ## Installation
 
 ```shell
-composer require shipstream/ups-rest-php-sdk
+composer require besmartand-pro/ups-api
 ```
 
 ## Basic Usage
@@ -13,7 +13,7 @@ composer require shipstream/ups-rest-php-sdk
 Create a UPS Client instance using a configuration object:
 
 ```php
-$config = new \ShipStream\Ups\Config([
+$config = new \BesmartandPro\UpsApi\Config([
     // Whether to send the requests to the UPS Customer Integration Environment instead of the production environment.
     // Optional, defaults to false.
     'use_testing_environment' => true,
@@ -29,7 +29,7 @@ $config = new \ShipStream\Ups\Config([
     'merchant_id' => 'your_unique_merchant_id'
 ]);
 
-$client = \ShipStream\Ups\ClientFactory::create($config);
+$client = \BesmartandPro\UpsApi\ClientFactory::create($config);
 ```
 
 The Client object contains methods for every endpoint available in the [UPS OpenAPI definition files](./openapi) with 
@@ -46,17 +46,17 @@ try {
     ]);
     // Do something with the response
 } catch (
-    \ShipStream\Ups\Api\Exception\GetSingleTrackResponseUsingGETNotFoundException |
-    \ShipStream\Ups\Api\Exception\GetSingleTrackResponseUsingGETBadRequestException |
-    \ShipStream\Ups\Api\Exception\GetSingleTrackResponseUsingGETInternalServerErrorException |
-    \ShipStream\Ups\Api\Exception\GetSingleTrackResponseUsingGETServiceUnavailableException $e
+    \BesmartandPro\UpsApi\Generated\Exception\GetSingleTrackResponseUsingGETNotFoundException |
+    \BesmartandPro\UpsApi\Exception\GetSingleTrackResponseUsingGETBadRequestException |
+    \BesmartandPro\UpsApi\Exception\GetSingleTrackResponseUsingGETInternalServerErrorException |
+    \BesmartandPro\UpsApi\Exception\GetSingleTrackResponseUsingGETServiceUnavailableException $e
 ) {
     $errors = $e->getErrorResponse()->getResponse()->getErrors();
     $errors = array_map(fn ($error) => $error->getMessage(), $errors);
     echo 'Error: '.implode(' - ', $errors)."\n";
-} catch (\ShipStream\Ups\Api\Exception\UnexpectedStatusCodeException $e) {
+} catch (\BesmartandPro\UpsApi\Exception\UnexpectedStatusCodeException $e) {
     echo "Unexpected response received from UPS: {$e->getMessage()}\n";
-} catch (\ShipStream\Ups\Exception\AuthenticationException $e) {
+} catch (\BesmartandPro\UpsApi\Exception\AuthenticationException $e) {
     echo "Authentication error: {$e->getMessage()}\n";
 }
 ```
@@ -79,7 +79,7 @@ To achieve this, the Client factory accepts a second parameter which can be any 
 For example, a Redis implementation could look like this:
 
 ```php
-class RedisAccessTokenCache implements \ShipStream\Ups\Authentication\AccessTokenCache
+class RedisAccessTokenCache implements \BesmartandPro\UpsApi\Authentication\AccessTokenCacheInterface
 {
     private $predis;
 
@@ -87,23 +87,23 @@ class RedisAccessTokenCache implements \ShipStream\Ups\Authentication\AccessToke
     {
         $this->predis = $predis;
     }
-    public function save(\ShipStream\Ups\Authentication\AccessToken $accessToken)
+    public function save(\BesmartandPro\UpsApi\Authentication\AccessToken $accessToken)
     {
         $clientId = $accessToken->getClientId();
         $accessTokenKey = "access_token:$clientId";
         $this->predis->set($accessTokenKey, serialize($accessToken));
     }
-    public function retrieve(string $clientId): ?\ShipStream\Ups\Authentication\AccessToken
+    public function retrieve(string $clientId): ?\BesmartandPro\UpsApi\Authentication\AccessToken
     {
         $accessTokenKey = "access_token:$clientId";
         $cachedAccessToken = $this->predis->get($accessTokenKey);
         if ($cachedAccessToken !== false) {
-            return unserialize($cachedAccessToken, ['allowed_classes' => [\ShipStream\Ups\Authentication\AccessToken::class]]);
+            return unserialize($cachedAccessToken, ['allowed_classes' => [\BesmartandPro\UpsApi\Authentication\AccessToken::class]]);
         }
         return null;
     }
 }
-$client = \ShipStream\Ups\ClientFactory::create($config, new RedisAccessTokenCache(new \Predis\Client()));
+$client = \BesmartandPro\UpsApi\ClientFactory::create($config, new RedisAccessTokenCache(new \Predis\Client()));
 ```
 
 ## Using a custom HTTP Client
@@ -112,13 +112,13 @@ If you wish to customize how HTTP requests are made, perhaps for logging or to a
 a third parameter that can be any HTTP Client that implements the [PSR-18](https://www.php-fig.org/psr/psr-18/) standard. E.g.:
 
 ```php
-$client = \ShipStream\Ups\ClientFactory::create($config, null, new \GuzzleHttp\Client());
+$client = \BesmartandPro\UpsApi\ClientFactory::create($config, null, new \GuzzleHttp\Client());
 ```
 
 Note that the HTTP Client **must not** throw exceptions for 4xx and 5xx responses, as those should be handled by the SDK.
 
 ## Development
 
-The classes under the `ShipStream\Ups\Api` namespace are all generated using [janephp](https://jane.readthedocs.io/en/latest/index.html). 
+The classes under the `BesmartandPro\UpsApi` namespace are all generated using [janephp](https://jane.readthedocs.io/en/latest/index.html). 
 
 Run the `generate.sh` script to regenerate the classes when needed.

@@ -1,15 +1,14 @@
 <?php
 
-namespace ShipStream\Ups\Authentication;
+declare(strict_types=1);
 
-/**
- * Stores access tokens in-memory, useful for tests.
- */
-class InMemoryAccessTokenCache implements AccessTokenCache
+namespace BesmartandPro\UpsApi\Authentication;
+
+class InMemoryAccessTokenCache implements AccessTokenCacheInterface
 {
     protected ?AccessToken $accessToken = null;
 
-    public function save(AccessToken $accessToken)
+    public function save(AccessToken $accessToken): void
     {
         $this->accessToken = $accessToken;
     }
@@ -19,10 +18,11 @@ class InMemoryAccessTokenCache implements AccessTokenCache
         if (
             $this->accessToken !== null &&
             $this->accessToken->hasAccessTokenExpired() &&
-            ! $this->accessToken->isRefreshable()
+            !$this->accessToken->isRefreshable()
         ) {
             $this->accessToken = null;
         }
+        
         return $this->accessToken;
     }
 }

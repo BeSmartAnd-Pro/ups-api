@@ -1,6 +1,8 @@
 <?php
 
-namespace ShipStream\Ups\Plugin;
+declare(strict_types=1);
+
+namespace BesmartandPro\UpsApi\Plugin;
 
 use Http\Client\Common\Plugin;
 use Http\Promise\Promise;
@@ -21,14 +23,13 @@ class AddBaseUrlPlugin implements Plugin
 
     public function handleRequest(RequestInterface $request, callable $next, callable $first): Promise
     {
+        //todo wrong interface?
         $basePath = $this->baseUri->getPath();
         $path = $request->getUri()->getPath();
 
         // Don't append base path for OAuth requests
-        if ( ! preg_match("/^\/security/", $path)) {
-            if (substr($path, 0, strlen($basePath)) !== $basePath) {
-                $path = $basePath . $path;
-            }
+        if (!preg_match("/^\/security/", $path) && strpos($path, $basePath) !== 0) {
+            $path = $basePath . $path;
         }
 
         $uri = $request->getUri()

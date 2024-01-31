@@ -1,10 +1,10 @@
 <?php
 
-namespace ShipStream\Ups\Authentication;
+namespace BesmartandPro\UpsApi\Authentication;
 
 use Jane\Component\OpenApiRuntime\Client\AuthenticationPlugin;
 use Psr\Http\Message\RequestInterface;
-use ShipStream\Ups\Exception\AuthenticationException;
+use BesmartandPro\UpsApi\Exception\AuthenticationException;
 
 class Oauth2Authentication implements AuthenticationPlugin
 {

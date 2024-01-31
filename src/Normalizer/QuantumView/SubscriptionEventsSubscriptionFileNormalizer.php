@@ -1,16 +1,13 @@
 <?php
 
-namespace ShipStream\Ups\Normalizer\QuantumView;
+declare(strict_types=1);
 
-use ShipStream\Ups\Api\Normalizer\SubscriptionEventsSubscriptionFileNormalizer as BaseNormalizer;
-use function array_is_list;
-use function is_array;
+namespace BesmartandPro\UpsApi\Normalizer\QuantumView;
+
+use BesmartandPro\UpsApi\Generated\Normalizer\SubscriptionEventsSubscriptionFileNormalizer as BaseNormalizer;
 
 class SubscriptionEventsSubscriptionFileNormalizer extends BaseNormalizer
 {
-    /**
-     * @inheritDoc
-     */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
         if ($data === null || is_array($data) === false) {
@@ -21,18 +18,23 @@ class SubscriptionEventsSubscriptionFileNormalizer extends BaseNormalizer
         if (isset($data['Manifest']) && ! array_is_list($data['Manifest'])) {
             $data['Manifest'] = [$data['Manifest']];
         }
+        
         if (isset($data['Origin']) && ! array_is_list($data['Origin'])) {
             $data['Origin'] = [$data['Origin']];
         }
+        
         if (isset($data['Exception']) && ! array_is_list($data['Exception'])) {
             $data['Exception'] = [$data['Exception']];
         }
+        
         if (isset($data['Delivery']) && ! array_is_list($data['Delivery'])) {
             $data['Delivery'] = [$data['Delivery']];
         }
+        
         if (isset($data['Generic']) && ! array_is_list($data['Generic'])) {
             $data['Generic'] = [$data['Generic']];
         }
+        
         return parent::denormalize($data, $class, $format, $context);
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace ShipStream\Ups;
+declare(strict_types=1);
 
-use InvalidArgumentException;
+namespace BesmartandPro\UpsApi;
 
 final class Config
 {
@@ -16,26 +16,22 @@ final class Config
 
     private string $clientSecret;
 
-    private string $redirectUri;
+    private ?string $redirectUri;
 
     private ?string $merchantId;
 
-    /**
-     * @throws InvalidArgumentException
-     */
-    public function __construct(array $config)
-    {
-        if (empty($config['client_id'])) {
-            throw new InvalidArgumentException('Missing required parameter: client_id');
-        }
-        if (empty($config['client_secret'])) {
-            throw new InvalidArgumentException('Missing required parameter: client_secret');
-        }
-        $this->useTestingEnvironment = $config['use_testing_environment'] ?? false;
-        $this->clientId = $config['client_id'];
-        $this->clientSecret = $config['client_secret'];
-        $this->redirectUri = $config['redirect_uri'] ?? '';
-        $this->merchantId = $config['merchant_id'] ?? null;
+    public function __construct(
+        string $clientId,
+        string $clientSecret,
+        bool $useTestingEnvironment = true,
+        ?string $merchantId = null,
+        ?string $redirectUri = null
+    ) {
+        $this->clientId              = $clientId;
+        $this->clientSecret          = $clientSecret;
+        $this->useTestingEnvironment = $useTestingEnvironment;
+        $this->merchantId            = $merchantId;
+        $this->redirectUri           = $redirectUri;
     }
 
     public function getEnvironmentBaseUrl(): string

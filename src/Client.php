@@ -1,15 +1,17 @@
 <?php
 
-namespace ShipStream\Ups;
+declare(strict_types=1);
+
+namespace BesmartandPro\UpsApi;
 
 use Http\Client\Common\PluginClient;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
-use ShipStream\Ups\Api\Client as ApiClient;
-use ShipStream\Ups\Authentication\AccessToken;
-use ShipStream\Ups\Authentication\AuthenticationManager;
-use ShipStream\Ups\Exception\AuthenticationException;
-use ShipStream\Ups\Normalizer\CustomJaneObjectNormalizer;
+use BesmartandPro\UpsApi\Generated\Client as ApiClient;
+use BesmartandPro\UpsApi\Authentication\AccessToken;
+use BesmartandPro\UpsApi\Authentication\AuthenticationManager;
+use BesmartandPro\UpsApi\Exception\AuthenticationException;
+use BesmartandPro\UpsApi\Normalizer\CustomJaneObjectNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -20,10 +22,7 @@ class Client extends ApiClient
 {
     protected AuthenticationManager $authManager;
 
-    /**
-     * Set Authentication Manager instance on the client. For internal use only.
-     */
-    public function setAuthManager(AuthenticationManager $authManager)
+    public function setAuthManager(AuthenticationManager $authManager): void
     {
         $this->authManager = $authManager;
     }
@@ -34,7 +33,7 @@ class Client extends ApiClient
      * @param string $code Authorization code obtained from the UPS login redirection request.
      * @throws AuthenticationException
      */
-    public function exchangeAuthorizationCode(string $code)
+    public function exchangeAuthorizationCode(string $code): void
     {
         $this->authManager->exchangeAuthorizationCode($code);
     }
@@ -55,19 +54,25 @@ class Client extends ApiClient
         if ($httpClient === null) {
             $httpClient = Psr18ClientDiscovery::find();
             $plugins = [];
+            
             if (count($additionalPlugins) > 0) {
                 $plugins = array_merge($plugins, $additionalPlugins);
             }
+            
             $httpClient = new PluginClient($httpClient, $plugins);
         }
+        
         $requestFactory = Psr17FactoryDiscovery::findRequestFactory();
         $streamFactory = Psr17FactoryDiscovery::findStreamFactory();
         // Use the custom object normalizer to override the generated normalizers
         $normalizers = [new ArrayDenormalizer(), new CustomJaneObjectNormalizer()];
+        
         if (count($additionalNormalizers) > 0) {
             $normalizers = array_merge($normalizers, $additionalNormalizers);
         }
+        
         $serializer = new Serializer($normalizers, [new JsonEncoder(new JsonEncode(), new JsonDecode(['json_decode_associative' => true]))]);
+        
         return new static($httpClient, $requestFactory, $serializer, $streamFactory);
     }
 }

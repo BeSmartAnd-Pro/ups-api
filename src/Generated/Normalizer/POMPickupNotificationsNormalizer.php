@@ -1,0 +1,97 @@
+<?php
+
+namespace BesmartandPro\UpsApi\Generated\Normalizer;
+
+use Jane\Component\JsonSchemaRuntime\Reference;
+use BesmartandPro\UpsApi\Generated\Runtime\Normalizer\CheckArray;
+use BesmartandPro\UpsApi\Generated\Runtime\Normalizer\ValidatorTrait;
+use Symfony\Component\Serializer\Exception\InvalidArgumentException;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+class POMPickupNotificationsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+    public function supportsDenormalization($data, $type, $format = null, array $context = array()) : bool
+    {
+        return $type === 'BesmartandPro\\UpsApi\\Generated\\Model\\POMPickupNotifications';
+    }
+    public function supportsNormalization($data, $format = null, array $context = array()) : bool
+    {
+        return is_object($data) && get_class($data) === 'BesmartandPro\\UpsApi\\Generated\\Model\\POMPickupNotifications';
+    }
+    /**
+     * @return mixed
+     */
+    public function denormalize($data, $class, $format = null, array $context = array())
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
+        }
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
+        }
+        $object = new \BesmartandPro\UpsApi\Generated\Model\POMPickupNotifications();
+        if (null === $data || false === \is_array($data)) {
+            return $object;
+        }
+        if (\array_key_exists('CompanyName', $data)) {
+            $object->setCompanyName($data['CompanyName']);
+            unset($data['CompanyName']);
+        }
+        if (\array_key_exists('EMailNotification', $data)) {
+            $values = array();
+            foreach ($data['EMailNotification'] as $value) {
+                $values[] = $this->denormalizer->denormalize($value, 'BesmartandPro\\UpsApi\\Generated\\Model\\PickupNotificationsEMailNotification', 'json', $context);
+            }
+            $object->setEMailNotification($values);
+            unset($data['EMailNotification']);
+        }
+        if (\array_key_exists('FailedEMail', $data)) {
+            $object->setFailedEMail($data['FailedEMail']);
+            unset($data['FailedEMail']);
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_1;
+            }
+        }
+        return $object;
+    }
+    /**
+     * @return array|string|int|float|bool|\ArrayObject|null
+     */
+    public function normalize($object, $format = null, array $context = array())
+    {
+        $data = array();
+        if ($object->isInitialized('companyName') && null !== $object->getCompanyName()) {
+            $data['CompanyName'] = $object->getCompanyName();
+        }
+        if ($object->isInitialized('eMailNotification') && null !== $object->getEMailNotification()) {
+            $values = array();
+            foreach ($object->getEMailNotification() as $value) {
+                $values[] = $this->normalizer->normalize($value, 'json', $context);
+            }
+            $data['EMailNotification'] = $values;
+        }
+        if ($object->isInitialized('failedEMail') && null !== $object->getFailedEMail()) {
+            $data['FailedEMail'] = $object->getFailedEMail();
+        }
+        foreach ($object as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $data[$key] = $value_1;
+            }
+        }
+        return $data;
+    }
+    public function getSupportedTypes(?string $format = null) : array
+    {
+        return array('BesmartandPro\\UpsApi\\Generated\\Model\\POMPickupNotifications' => false);
+    }
+}

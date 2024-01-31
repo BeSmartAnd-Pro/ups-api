@@ -1,20 +1,20 @@
 <?php
 
-namespace ShipStream\Ups\Authentication;
+namespace BesmartandPro\UpsApi\Authentication;
 
 use Exception;
-use ShipStream\Ups\Api\Client;
-use ShipStream\Ups\Api\Exception\GenerateTokenBadRequestException;
-use ShipStream\Ups\Api\Exception\GenerateTokenForbiddenException;
-use ShipStream\Ups\Api\Exception\GenerateTokenTooManyRequestsException;
-use ShipStream\Ups\Api\Exception\GenerateTokenUnauthorizedException;
-use ShipStream\Ups\Api\Exception\RefreshTokenBadRequestException;
-use ShipStream\Ups\Api\Exception\RefreshTokenTooManyRequestsException;
-use ShipStream\Ups\Api\Exception\RefreshTokenUnauthorizedException;
-use ShipStream\Ups\Api\Model\SecurityV1OauthRefreshPostBody;
-use ShipStream\Ups\Api\Model\SecurityV1OauthTokenPostBody;
-use ShipStream\Ups\Config;
-use ShipStream\Ups\Exception\AuthenticationException;
+use BesmartandPro\UpsApi\Client;
+use BesmartandPro\UpsApi\Generated\Exception\GenerateTokenBadRequestException;
+use BesmartandPro\UpsApi\Generated\Exception\GenerateTokenForbiddenException;
+use BesmartandPro\UpsApi\Generated\Exception\GenerateTokenTooManyRequestsException;
+use BesmartandPro\UpsApi\Generated\Exception\GenerateTokenUnauthorizedException;
+use BesmartandPro\UpsApi\Generated\Exception\RefreshTokenBadRequestException;
+use BesmartandPro\UpsApi\Generated\Exception\RefreshTokenTooManyRequestsException;
+use BesmartandPro\UpsApi\Generated\Exception\RefreshTokenUnauthorizedException;
+use BesmartandPro\UpsApi\Generated\Model\SecurityV1OauthRefreshPostBody;
+use BesmartandPro\UpsApi\Generated\Model\SecurityV1OauthTokenPostBody;
+use BesmartandPro\UpsApi\Config;
+use BesmartandPro\UpsApi\Exception\AuthenticationException;
 
 class AuthenticationManager
 {
@@ -26,9 +26,9 @@ class AuthenticationManager
 
     protected Client $client;
 
-    protected AccessTokenCache $accessTokenCache;
+    protected AccessTokenCacheInterface $accessTokenCache;
 
-    public function __construct(Config $config, ?AccessTokenCache $accessTokenCache = null)
+    public function __construct(Config $config, ?AccessTokenCacheInterface $accessTokenCache = null)
     {
         $this->config = $config;
         $this->accessTokenCache = $accessTokenCache ?? new InMemoryAccessTokenCache();
@@ -37,7 +37,7 @@ class AuthenticationManager
     /**
      * Set Client instance on the Authentication Manager. For internal use only.
      */
-    public function setClient(Client $client)
+    public function setClient(Client $client): void
     {
         $this->client = $client;
     }
@@ -83,7 +83,7 @@ class AuthenticationManager
      * @param string $code Authorization code obtained from the UPS login redirection request.
      * @throws AuthenticationException
      */
-    public function exchangeAuthorizationCode(string $code)
+    public function exchangeAuthorizationCode(string $code): void
     {
         $accessToken = $this->generateToken($code);
         $this->accessTokenCache->save($accessToken);

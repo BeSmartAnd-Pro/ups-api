@@ -1,15 +1,13 @@
 <?php
 
-namespace ShipStream\Ups\Normalizer\AddressValidation;
+declare(strict_types=1);
 
-use ShipStream\Ups\Api\Normalizer\CandidateAddressKeyFormatNormalizer as BaseNormalizer;
-use function is_array;
+namespace BesmartandPro\UpsApi\Normalizer\AddressValidation;
+
+use BesmartandPro\UpsApi\Generated\Normalizer\CandidateAddressKeyFormatNormalizer as BaseNormalizer;
 
 class CandidateAddressKeyFormatNormalizer extends BaseNormalizer
 {
-    /**
-     * @inheritDoc
-     */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
         if ($data === null || is_array($data) === false) {
@@ -21,6 +19,7 @@ class CandidateAddressKeyFormatNormalizer extends BaseNormalizer
         if (isset($data['AddressLine']) && ! is_array($data['AddressLine'])) {
             $data['AddressLine'] = [$data['AddressLine']];
         }
+        
         return parent::denormalize($data, $class, $format, $context);
     }
 }

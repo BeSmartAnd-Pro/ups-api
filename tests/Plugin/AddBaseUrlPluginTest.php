@@ -9,9 +9,9 @@ use Nyholm\Psr7\Response;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
-use ShipStream\Ups\Plugin\AddBaseUrlPlugin;
+use BesmartandPro\UpsApi\Plugin\AddBaseUrlPlugin;
 
-/** @covers \ShipStream\Ups\Plugin\AddBaseUrlPlugin */
+/** @covers \BesmartandPro\UpsApi\Plugin\AddBaseUrlPlugin */
 final class AddBaseUrlPluginTest extends TestCase
 {
     /**
