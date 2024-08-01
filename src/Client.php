@@ -53,7 +53,7 @@ class Client extends ApiClient
     {
         if ($httpClient === null) {
             $httpClient = Psr18ClientDiscovery::find();
-            $plugins = [];
+            $plugins    = [];
             
             if (count($additionalPlugins) > 0) {
                 $plugins = array_merge($plugins, $additionalPlugins);
@@ -63,7 +63,7 @@ class Client extends ApiClient
         }
         
         $requestFactory = Psr17FactoryDiscovery::findRequestFactory();
-        $streamFactory = Psr17FactoryDiscovery::findStreamFactory();
+        $streamFactory  = Psr17FactoryDiscovery::findStreamFactory();
         // Use the custom object normalizer to override the generated normalizers
         $normalizers = [new ArrayDenormalizer(), new CustomJaneObjectNormalizer()];
         
