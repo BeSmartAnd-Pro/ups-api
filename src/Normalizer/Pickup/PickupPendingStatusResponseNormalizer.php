@@ -1,24 +1,48 @@
 <?php
 
-declare(strict_types=1);
+namespace BesmartandPro\Ups\Normalizer\Pickup;
 
-namespace BesmartandPro\UpsApi\Normalizer\Pickup;
+use BesmartandPro\Ups\Api\Normalizer\PickupPendingStatusResponseNormalizer as BaseNormalizer;
+use Symfony\Component\HttpKernel\Kernel;
+use function array_is_list;
+use function is_array;
 
-use BesmartandPro\UpsApi\Generated\Normalizer\PickupPendingStatusResponseNormalizer as BaseNormalizer;
-
-class PickupPendingStatusResponseNormalizer extends BaseNormalizer
-{
-    public function denormalize($data, $class, $format = null, array $context = [])
+if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
+    class PickupPendingStatusResponseNormalizer extends BaseNormalizer
     {
-        if ($data === null || is_array($data) === false) {
-            return parent::denormalize($data, $class, $format, $context);
-        }
+        /**
+         * @inheritDoc
+         */
+        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+        {
+            if ($data === null || is_array($data) === false) {
+                return parent::denormalize($data, $type, $format, $context);
+            }
 
-        // Force PendingStatus to always be an array even when the API returns a single value
-        if (isset($data['PendingStatus']) && ! array_is_list($data['PendingStatus'])) {
-            $data['PendingStatus'] = [$data['PendingStatus']];
+            // Force PendingStatus to always be an array even when the API returns a single value
+            if (isset($data['PendingStatus']) && !array_is_list($data['PendingStatus'])) {
+                $data['PendingStatus'] = [$data['PendingStatus']];
+            }
+            return parent::denormalize($data, $type, $format, $context);
         }
-        
-        return parent::denormalize($data, $class, $format, $context);
+    }
+} else {
+    class PickupPendingStatusResponseNormalizer extends BaseNormalizer
+    {
+        /**
+         * @inheritDoc
+         */
+        public function denormalize($data, $type, $format = null, array $context = [])
+        {
+            if ($data === null || is_array($data) === false) {
+                return parent::denormalize($data, $type, $format, $context);
+            }
+
+            // Force PendingStatus to always be an array even when the API returns a single value
+            if (isset($data['PendingStatus']) && !array_is_list($data['PendingStatus'])) {
+                $data['PendingStatus'] = [$data['PendingStatus']];
+            }
+            return parent::denormalize($data, $type, $format, $context);
+        }
     }
 }

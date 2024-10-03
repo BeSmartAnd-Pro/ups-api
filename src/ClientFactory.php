@@ -2,23 +2,22 @@
 
 declare(strict_types=1);
 
-namespace BesmartandPro\UpsApi;
+namespace BesmartandPro\Ups;
 
 use Http\Client\Common\PluginClient;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Jane\Component\OpenApiRuntime\Client\Plugin\AuthenticationRegistry;
 use Psr\Http\Client\ClientInterface;
-use BesmartandPro\UpsApi\Generated\Authentication\BasicAuthAuthentication;
-use BesmartandPro\UpsApi\Authentication\AccessTokenCacheInterface;
-use BesmartandPro\UpsApi\Authentication\AuthenticationManager;
-use BesmartandPro\UpsApi\Authentication\Oauth2Authentication;
-use BesmartandPro\UpsApi\Plugin\AddBaseUrlPlugin;
+use BesmartandPro\Ups\Api\Authentication\BasicAuthAuthentication;
+use BesmartandPro\Ups\Authentication\AccessTokenCache;
+use BesmartandPro\Ups\Authentication\AuthenticationManager;
+use BesmartandPro\Ups\Authentication\Oauth2Authentication;
+use BesmartandPro\Ups\Plugin\AddBaseUrlPlugin;
 
 class ClientFactory
 {
-    public static function create(Config $config, ?AccessTokenCacheInterface $accessTokenCache = null, ?ClientInterface $httpClient = null): Client
+    public static function create(Config $config, ?AccessTokenCache $accessTokenCache = null, ?ClientInterface $httpClient = null): Client
     {
-        //todo another wrong call?
         $baseUri = Psr17FactoryDiscovery::findUriFactory()
             ->createUri($config->getEnvironmentBaseUrl())
             ->withPath(Config::BASE_PATH);
@@ -38,6 +37,7 @@ class ClientFactory
 
         $apiClient = Client::create($httpClient, $plugins);
         $apiClient->setAuthManager($authManager);
+        $apiClient->setConfig($config);
         $authManager->setClient($apiClient);
         
         return $apiClient;

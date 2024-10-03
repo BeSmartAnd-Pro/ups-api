@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace BesmartandPro\UpsApi\Exception;
+namespace BesmartandPro\Ups\Exception;
 
 use RuntimeException;
-use BesmartandPro\UpsApi\Generated\Exception\ClientException;
+use BesmartandPro\Ups\Api\Exception\ClientException;
 
 class AuthenticationException extends RuntimeException implements ClientException
 {

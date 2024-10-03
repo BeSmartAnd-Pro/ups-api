@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BesmartandPro\UpsApi\Authentication;
+namespace BesmartandPro\Ups\Authentication;
 
 use DateTime;
 use DateTimeZone;
@@ -110,6 +110,7 @@ class AccessToken
     public function hasRefreshTokenExpired(): bool
     {
         $now = new DateTime('now', new DateTimeZone('UTC'));
+        
         return ($this->getRefreshTokenIssuedAt() + $this->getRefreshTokenExpiresIn()) < $now->getTimestamp();
     }
 

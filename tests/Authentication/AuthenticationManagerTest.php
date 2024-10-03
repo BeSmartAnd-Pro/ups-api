@@ -1,21 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Authentication;
 
 use Nyholm\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientInterface;
-use BesmartandPro\UpsApi\Authentication\AccessToken;
-use BesmartandPro\UpsApi\Authentication\AccessTokenCacheInterface;
-use BesmartandPro\UpsApi\Authentication\AuthenticationManager;
-use BesmartandPro\UpsApi\Authentication\InMemoryAccessTokenCache;
-use BesmartandPro\UpsApi\Client;
-use BesmartandPro\UpsApi\Config;
+use BesmartandPro\Ups\Authentication\AccessToken;
+use BesmartandPro\Ups\Authentication\AccessTokenCache;
+use BesmartandPro\Ups\Authentication\AuthenticationManager;
+use BesmartandPro\Ups\Authentication\InMemoryAccessTokenCache;
+use BesmartandPro\Ups\Client;
+use BesmartandPro\Ups\Config;
+use BesmartandPro\Ups\Exception\AuthenticationException;
 
-/** @covers \BesmartandPro\UpsApi\Authentication\AuthenticationManager */
+/** @covers AuthenticationManager */
 final class AuthenticationManagerTest extends TestCase
 {
-    public function testItLoadsAccessTokenFromCache()
+    public function testItLoadsAccessTokenFromCache(): void
     {
         $config = new Config([
             'use_testing_environment' => true,
@@ -29,7 +32,7 @@ final class AuthenticationManagerTest extends TestCase
             ->setIssuedAt(time())
             ->setExpiresIn(strtotime('+4 hours'));
 
-        $cacheStub = $this->createStub(AccessTokenCacheInterface::class);
+        $cacheStub = $this->createStub(AccessTokenCache::class);
         $cacheStub->method('retrieve')
             ->willReturn($expectedAccessToken);
 
@@ -40,7 +43,29 @@ final class AuthenticationManagerTest extends TestCase
         self::assertSame($expectedAccessToken, $actualAccessToken);
     }
 
-    public function testItExchangesAuthCodeWithAnAccessToken()
+    public function testItDoesNotUseClientCredentialsWithAuthorizationCodeGrantType(): void
+    {
+        $config = new Config([
+            'use_testing_environment' => true,
+            'grant_type' => Config::GRANT_TYPE_AUTHORIZATION_CODE,
+            'client_id' => 'dummy_client_id',
+            'client_secret' => 'dummy_client_secret'
+        ]);
+
+        $clientStub = $this->createStub(ClientInterface::class);
+        $clientStub->method('sendRequest')
+            ->willReturn(new Response(200, ['Content-Type' => 'application/json'], null));
+
+        $authManager = new AuthenticationManager($config);
+        $authManager->setClient(Client::create($clientStub));
+
+        $this->expectException(AuthenticationException::class);
+        $this->expectExceptionMessage('Unauthenticated');
+
+        $authManager->requestAccessToken();
+    }
+
+    public function testItExchangesAuthCodeWithAnAccessToken(): void
     {
         $config = new Config([
             'use_testing_environment' => true,
@@ -75,11 +100,11 @@ final class AuthenticationManagerTest extends TestCase
         self::assertEquals($expectedResponse->refresh_token, $actualResponse->getRefreshToken());
         self::assertEquals($expectedResponse->expires_in, $actualResponse->getExpiresIn());
         self::assertEquals($expectedResponse->refresh_token_expires_in, $actualResponse->getRefreshTokenExpiresIn());
-        self::assertEquals($expectedResponse->issued_at / 1000, $actualResponse->getIssuedAt());
-        self::assertEquals($expectedResponse->refresh_token_issued_at / 1000, $actualResponse->getRefreshTokenIssuedAt());
+        self::assertEquals((int)($expectedResponse->issued_at / 1000), $actualResponse->getIssuedAt());
+        self::assertEquals((int)($expectedResponse->refresh_token_issued_at / 1000), $actualResponse->getRefreshTokenIssuedAt());
     }
 
-    public function testItRequestsANewAccessTokenWhenSkippingCache()
+    public function testItRequestsANewAccessTokenWhenSkippingCache(): void
     {
         $config = new Config([
             'use_testing_environment' => true,
@@ -115,10 +140,10 @@ final class AuthenticationManagerTest extends TestCase
         self::assertEquals($expectedTokenResponse->client_id, $actualTokenResponse->getClientId());
         self::assertEquals($expectedTokenResponse->access_token, $actualTokenResponse->getAccessToken());
         self::assertEquals($expectedTokenResponse->expires_in, $actualTokenResponse->getExpiresIn());
-        self::assertEquals($expectedTokenResponse->issued_at / 1000, $actualTokenResponse->getIssuedAt());
+        self::assertEquals((int)($expectedTokenResponse->issued_at / 1000), $actualTokenResponse->getIssuedAt());
     }
 
-    public function testItRefreshesTheAccessTokenWhenItExpires()
+    public function testItRefreshesTheAccessTokenWhenItExpires(): void
     {
         $config = new Config([
             'use_testing_environment' => true,
@@ -155,7 +180,7 @@ final class AuthenticationManagerTest extends TestCase
         self::assertEquals($expectedTokenResponse->client_id, $actualTokenResponse->getClientId());
         self::assertEquals($expectedTokenResponse->access_token, $actualTokenResponse->getAccessToken());
         self::assertEquals($expectedTokenResponse->expires_in, $actualTokenResponse->getExpiresIn());
-        self::assertEquals($expectedTokenResponse->issued_at / 1000, $actualTokenResponse->getIssuedAt());
+        self::assertEquals((int)($expectedTokenResponse->issued_at / 1000), $actualTokenResponse->getIssuedAt());
         self::assertFalse($actualTokenResponse->hasAccessTokenExpired());
     }
 }

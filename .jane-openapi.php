@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
     'openapi-file' => __DIR__ . '/openapi.json',
-    'namespace' => 'BesmartandPro\UpsApi\Generated',
-    'directory' => __DIR__ . '/src/Generated',
+    'namespace' => 'BesmartandPro\Ups\Api',
+    'directory' => __DIR__ . '/src/Api',
     'throw-unexpected-status-code' => true,
 ];

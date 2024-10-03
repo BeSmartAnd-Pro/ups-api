@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BesmartandPro\UpsApi\Plugin;
+namespace BesmartandPro\Ups\Plugin;
 
 use Http\Client\Common\Plugin;
 use Http\Promise\Promise;
@@ -23,12 +23,11 @@ class AddBaseUrlPlugin implements Plugin
 
     public function handleRequest(RequestInterface $request, callable $next, callable $first): Promise
     {
-        //todo wrong interface?
         $basePath = $this->baseUri->getPath();
         $path = $request->getUri()->getPath();
 
         // Don't append base path for OAuth requests
-        if (!preg_match("/^\/security/", $path) && strpos($path, $basePath) !== 0) {
+        if (!preg_match("/^\/security/", $path) && !str_starts_with($path, $basePath)) {
             $path = $basePath . $path;
         }
 
@@ -36,8 +35,8 @@ class AddBaseUrlPlugin implements Plugin
             ->withScheme($this->baseUri->getScheme())
             ->withHost($this->baseUri->getHost())
             ->withPort($this->baseUri->getPort())
-            ->withPath($path)
-        ;
+            ->withPath($path);
+        
         return $next($request->withUri($uri));
     }
 }

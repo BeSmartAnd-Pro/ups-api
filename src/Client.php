@@ -2,16 +2,18 @@
 
 declare(strict_types=1);
 
-namespace BesmartandPro\UpsApi;
+namespace BesmartandPro\Ups;
 
 use Http\Client\Common\PluginClient;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
-use BesmartandPro\UpsApi\Generated\Client as ApiClient;
-use BesmartandPro\UpsApi\Authentication\AccessToken;
-use BesmartandPro\UpsApi\Authentication\AuthenticationManager;
-use BesmartandPro\UpsApi\Exception\AuthenticationException;
-use BesmartandPro\UpsApi\Normalizer\CustomJaneObjectNormalizer;
+use BesmartandPro\Ups\Api\Client as ApiClient;
+use BesmartandPro\Ups\Endpoint\AuthorizeClient;
+use BesmartandPro\Ups\Authentication\AccessToken;
+use BesmartandPro\Ups\Authentication\AuthenticationManager;
+use BesmartandPro\Ups\Exception\AuthenticationException;
+use BesmartandPro\Ups\Normalizer\CustomJaneObjectNormalizer;
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -22,6 +24,27 @@ class Client extends ApiClient
 {
     protected AuthenticationManager $authManager;
 
+    protected Config $config;
+
+    /**
+     * Set Config instance on the client. For internal use only.
+     */
+    public function setConfig(Config $config): void
+    {
+        $this->config = $config;
+    }
+
+    /**
+     * Retrieve the Config object that was used to instantiate this client instance.
+     */
+    public function getConfig(): Config
+    {
+        return $this->config;
+    }
+
+    /**
+     * Set Authentication Manager instance on the client. For internal use only.
+     */
     public function setAuthManager(AuthenticationManager $authManager): void
     {
         $this->authManager = $authManager;
@@ -49,11 +72,19 @@ class Client extends ApiClient
         return $this->authManager->requestAccessToken($skipCache);
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function authorizeClient(array $queryParameters = [], string $fetch = self::FETCH_OBJECT): ResponseInterface
+    {
+        return $this->executeEndpoint(new AuthorizeClient($queryParameters), $fetch);
+    }
+
     public static function create($httpClient = null, array $additionalPlugins = [], array $additionalNormalizers = []): Client
     {
         if ($httpClient === null) {
             $httpClient = Psr18ClientDiscovery::find();
-            $plugins    = [];
+            $plugins = [];
             
             if (count($additionalPlugins) > 0) {
                 $plugins = array_merge($plugins, $additionalPlugins);
@@ -63,7 +94,7 @@ class Client extends ApiClient
         }
         
         $requestFactory = Psr17FactoryDiscovery::findRequestFactory();
-        $streamFactory  = Psr17FactoryDiscovery::findStreamFactory();
+        $streamFactory = Psr17FactoryDiscovery::findStreamFactory();
         // Use the custom object normalizer to override the generated normalizers
         $normalizers = [new ArrayDenormalizer(), new CustomJaneObjectNormalizer()];
         

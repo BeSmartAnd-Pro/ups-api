@@ -2,9 +2,12 @@
 
 declare(strict_types=1);
 
-namespace BesmartandPro\UpsApi\Authentication;
+namespace BesmartandPro\Ups\Authentication;
 
-class InMemoryAccessTokenCache implements AccessTokenCacheInterface
+/**
+ * Stores access tokens in-memory, useful for tests.
+ */
+class InMemoryAccessTokenCache implements AccessTokenCache
 {
     protected ?AccessToken $accessToken = null;
 
@@ -18,11 +21,10 @@ class InMemoryAccessTokenCache implements AccessTokenCacheInterface
         if (
             $this->accessToken !== null &&
             $this->accessToken->hasAccessTokenExpired() &&
-            !$this->accessToken->isRefreshable()
+            ! $this->accessToken->isRefreshable()
         ) {
             $this->accessToken = null;
         }
-        
         return $this->accessToken;
     }
 }
